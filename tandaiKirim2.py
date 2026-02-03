@@ -188,21 +188,6 @@ def main():
                         print("Input tidak valid. Melanjutkan ke baris berikutnya.")
                         continue
                 
-                # Pengecekan tambahan: jika hasilgc = 1, latitude dan longitude harus ada
-                if hasilgc == 1:
-                    if pd.isna(latitude) or str(latitude).strip() == '' or pd.isna(longitude) or str(longitude).strip() == '':
-                        print(f"Pemberitahuan: Untuk hasilgc=1 pada baris {index}, latitude dan longitude harus diisi. Latitude: {latitude}, Longitude: {longitude}.")
-                        choice = input("Apakah Anda ingin berhenti (y) atau lanjut ke baris berikutnya (n)? ").strip().lower()
-                        if choice == 'y':
-                            print("Proses dihentikan.")
-                            sys.exit(0)
-                        elif choice == 'n':
-                            print("Melanjutkan ke baris berikutnya.")
-                            continue
-                        else:
-                            print("Input tidak valid. Melanjutkan ke baris berikutnya.")
-                            continue
-                
                 # Gunakan Playwright API Request untuk mengirim data (lebih aman dari blokir)
                 max_request_retries = 5
                 request_success = False
