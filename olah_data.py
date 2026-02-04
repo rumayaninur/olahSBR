@@ -3,18 +3,18 @@ import numpy as np
 import sys
 
 # ganti nama u
-PETUGAS_GC = 'Maya'
-USERNAME = 'rumayaninur'
+PETUGAS_GC = ['Ryan', 'Amanda', 'Tiara']
+USERNAME = ['rumayaninur']
 
 # ganti False kalo u mau overwrite data yg dah u gc
 DROP_ALL_USERNAME = True
 
 # sesuaikan path file hasil gc
-HASIL_GC = 'Alokasi GC 7601 fix.xlsx'
+HASIL_GC = 'C:/Users/HP/Downloads/GC/Olah data/Alokasi GC 7601 fix.xlsx'
 SHEETS = ['Banggae', 'Bangtim', 'Pamboang', 'Tammerodo', 'Sendana', 'Tubo', 'Malunda', 'Ulumanda']
 
 # sesuaikan path file yg akan dikirim ke matchapro
-BAHAN_KIRIM = 'data_gc_profiling_bahan_kirim.csv'
+BAHAN_KIRIM = 'C:/Users/HP/Downloads/GC/Olah data/6 coba/data_gc_profiling_bahan_kirim.csv'
 
 # kolom yg harus ada di HASIL_GC
 required_cols = {
@@ -102,7 +102,7 @@ def main():
 
     for df in dfs.values():
         mask = (
-            (df['Petugas GC'] == PETUGAS_GC) &
+            (df['Petugas GC'].isin(PETUGAS_GC)) &
             (df['apakah sudah diinput di matchapro mobile?'] == False) &
             (df['hasil update keberadaan usaha'].notna())
         )
@@ -123,7 +123,7 @@ def main():
         base_df = df[df['gc_username'].isna()]
     else:
         base_df = df.loc[
-            df['gc_username'].isin([USERNAME]) | df['gc_username'].isna()
+            df['gc_username'].isin(USERNAME) | df['gc_username'].isna()
         ]
     
     result = (
@@ -140,17 +140,24 @@ def main():
     print(f"Total hasil gc: {len(result)} record")
 
     # update longlat ke hasil scrapping
-    result['latitude'] = (
-        result['latitude_update']
-        .combine_first(result['latitude_gc'])
-        .combine_first(result['latitude'])
+    mask_gc = (
+        result['latitude_gc'].notna() &
+        result['longitude_gc'].notna()
     )
 
-    result['longitude'] = (
-        result['longitude_update']
-        .combine_first(result['longitude_gc'])
-        .combine_first(result['longitude'])
+    result.loc[mask_gc, ['latitude', 'longitude']] = (
+        result.loc[mask_gc, ['latitude_gc', 'longitude_gc']].values
     )
+
+    mask_update = (
+        result['latitude_update'].notna() &
+        result['longitude_update'].notna()
+    )
+
+    result.loc[mask_update, ['latitude', 'longitude']] = (
+        result.loc[mask_update, ['latitude_update', 'longitude_update']].values
+    )
+
 
     # benerin format longlat
     result['latitude'] = result['latitude'].apply(fix_latitude)
