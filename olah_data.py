@@ -178,4 +178,4 @@ def main():
     print(f"Output disimpan ke: {BAHAN_KIRIM}")
 
 if __name__ == "__main__":
-    main()test 
+    main()
