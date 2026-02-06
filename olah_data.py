@@ -3,18 +3,18 @@ import numpy as np
 import sys
 
 # ganti nama u
-PETUGAS_GC = ['Ryan', 'Amanda', 'Tiara']
+PETUGAS_GC = ['Aminah']
 USERNAME = ['rumayaninur']
 
 # ganti False kalo u mau overwrite data yg dah u gc
 DROP_ALL_USERNAME = True
 
 # sesuaikan path file hasil gc
-HASIL_GC = 'C:/Users/HP/Downloads/GC/Olah data/Alokasi GC 7601 fix.xlsx'
+HASIL_GC = 'Alokasi GC 7601 fix.xlsx'
 SHEETS = ['Banggae', 'Bangtim', 'Pamboang', 'Tammerodo', 'Sendana', 'Tubo', 'Malunda', 'Ulumanda']
 
 # sesuaikan path file yg akan dikirim ke matchapro
-BAHAN_KIRIM = 'C:/Users/HP/Downloads/GC/Olah data/6 coba/data_gc_profiling_bahan_kirim.csv'
+BAHAN_KIRIM = 'data_gc_profiling_bahan_kirim.csv'
 
 # kolom yg harus ada di HASIL_GC
 required_cols = {
@@ -36,6 +36,8 @@ def fix_longitude(x):
         return np.nan
 
     s = str(x).strip()
+    if s.startswith(', '):
+        s = s[2:]
     s = s.replace('..', '.').replace(',', '.')
 
     try:
