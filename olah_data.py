@@ -3,11 +3,11 @@ import numpy as np
 import sys
 
 # ganti nama u
-PETUGAS_GC = ['Syamsi', 'Diarti']
+PETUGAS_GC = ['Maya']
 USERNAME = ['rumayaninur']
 
 # ganti False kalo u mau overwrite data yg dah u gc
-DROP_ALL_USERNAME = True
+DROP_ALL_USERNAME = False
 
 # sesuaikan path file hasil gc
 HASIL_GC = 'Alokasi GC 7601 fix.xlsx'
@@ -21,14 +21,14 @@ required_cols = {
     "idsbr",
     "Petugas GC",
     "nama usaha hasil update",
-    "hasil update keberadaan usaha",
+    "hasil update keberadaan usaha\n\n1. Ditemukan\n3. Tutup\n4. Ganda\n99.  Tidak Ditemukan",
     "latitude_update",
     "longitude_update",
-    "apakah sudah diinput di matchapro mobile?"
+    "apakah sudah diinput di matchapro mobile?\n\ncentang kalau sudah"
 }
 
 schema = {
-    'hasil update keberadaan usaha': 'Int64'
+    'hasil update keberadaan usaha\n\n1. Ditemukan\n3. Tutup\n4. Ganda\n99.  Tidak Ditemukan': 'Int64'
 }
 
 def fix_longitude(x):
@@ -103,13 +103,13 @@ def main():
     frames = []
 
     for df in dfs.values():
-        df.loc[df['hasil update keberadaan usaha'] == 0,
-           'hasil update keberadaan usaha'] = 99
+        df.loc[df['hasil update keberadaan usaha\n\n1. Ditemukan\n3. Tutup\n4. Ganda\n99.  Tidak Ditemukan'] == 0,
+           'hasil update keberadaan usaha\n\n1. Ditemukan\n3. Tutup\n4. Ganda\n99.  Tidak Ditemukan'] = 99
         
         mask = (
             (df['Petugas GC'].isin(PETUGAS_GC)) &
-            (df['apakah sudah diinput di matchapro mobile?'] == False) &
-            (df['hasil update keberadaan usaha'].notna())
+            (df['apakah sudah diinput di matchapro mobile?\n\ncentang kalau sudah'] == False) &
+            (df['hasil update keberadaan usaha\n\n1. Ditemukan\n3. Tutup\n4. Ganda\n99.  Tidak Ditemukan'].notna())
         )
 
         if mask.any():
@@ -122,7 +122,7 @@ def main():
     nama_usaha_gc_untouched = df['nama_usaha_gc']
 
     # merge hasil scrapping sama hasil gc
-    cols_to_merge = ['idsbr', "latitude_update", "longitude_update", "nama usaha hasil update", "hasil update keberadaan usaha"]
+    cols_to_merge = ['idsbr', "latitude_update", "longitude_update", "nama usaha hasil update", "hasil update keberadaan usaha\n\n1. Ditemukan\n3. Tutup\n4. Ganda\n99.  Tidak Ditemukan"]
 
     if DROP_ALL_USERNAME:
         base_df = df[df['gc_username'].isna()]
@@ -173,7 +173,7 @@ def main():
     # benerin struktur kolom
     result = result.rename(columns={
         'nama usaha hasil update': 'nama_usaha_edit',
-        'hasil update keberadaan usaha': 'hasilgc'
+        'hasil update keberadaan usaha\n\n1. Ditemukan\n3. Tutup\n4. Ganda\n99.  Tidak Ditemukan': 'hasilgc'
     })
 
     result['alamat_usaha_edit'] = ''
