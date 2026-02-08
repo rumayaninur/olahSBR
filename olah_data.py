@@ -7,7 +7,7 @@ PETUGAS_GC = ['Maya']
 USERNAME = ['rumayaninur']
 
 # ganti False kalo u mau overwrite data yg dah u gc
-DROP_ALL_USERNAME = False
+DROP_ALL_USERNAME = True
 
 # sesuaikan path file hasil gc
 HASIL_GC = 'Alokasi GC 7601 fix.xlsx'
@@ -151,7 +151,9 @@ def main():
     )
 
     result.loc[mask_gc, ['latitude', 'longitude']] = (
-        result.loc[mask_gc, ['latitude_gc', 'longitude_gc']].values
+        result.loc[mask_gc, ['latitude_gc', 'longitude_gc']]
+            .astype(float)
+            .values
     )
 
     mask_update = (
