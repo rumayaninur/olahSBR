@@ -3,7 +3,7 @@ import numpy as np
 import sys
 
 # ganti nama u
-PETUGAS_GC = ['Aminah']
+PETUGAS_GC = ['Syamsi', 'Diarti']
 USERNAME = ['rumayaninur']
 
 # ganti False kalo u mau overwrite data yg dah u gc
@@ -103,6 +103,9 @@ def main():
     frames = []
 
     for df in dfs.values():
+        df.loc[df['hasil update keberadaan usaha'] == 0,
+           'hasil update keberadaan usaha'] = 99
+        
         mask = (
             (df['Petugas GC'].isin(PETUGAS_GC)) &
             (df['apakah sudah diinput di matchapro mobile?'] == False) &
